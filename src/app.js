@@ -9,7 +9,7 @@ const { swaggerDocs } = require("./providers/swagger");
 const storageRoutes = require("./routes/storage");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 443;
 
 // Get Swagger specification
 const swaggerSpec = swaggerDocs;
