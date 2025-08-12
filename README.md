@@ -24,10 +24,18 @@ Create a `.env` file in the root directory with the following variables:
 
 ```env
 # Server Configuration
-PORT=5000
+PORT=3000
 NODE_ENV=dev
 
-# AWS Configuration
+# MongoDB Configuration
+MONGO_URL=mongodb://localhost:27017/gitt
+
+# Supabase Configuration (for authentication)
+SUPABASE_URL=your_supabase_url_here
+SUPABASE_KEY=your_supabase_anon_key_here
+SUPABASE_SERVICE_KEY=your_supabase_service_role_key_here
+
+# AWS Configuration (for storage)
 AWS_ACCESS_KEY_ID=your_aws_access_key_id
 AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
 AWS_S3_BUCKET=sheek-backend
@@ -52,6 +60,13 @@ The server will start on port 3000 (or the port specified in your `.env` file).
 ### Storage API
 
 - **POST** `/api/storage/upload-url` - Generate presigned URL for file upload
+
+### Resource API
+
+- **POST** `/api/resource` - Create a new resource with OCR content extraction
+  - Requires authentication (Bearer token in Authorization header)
+  - Automatically downloads PDF from provided URL and extracts text using OCR
+  - Stores extracted content in MongoDB
 
 ### Other Endpoints
 
@@ -96,22 +111,65 @@ curl -X POST http://localhost:3000/api/storage/upload-url \
 }
 ```
 
+### Create Resource with OCR
+
+```bash
+curl -X POST http://localhost:3000/api/resource \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer your_supabase_token_here" \
+  -d '{
+    "title": "Sample PDF Document",
+    "fileUrl": "https://example.com/document.pdf"
+  }'
+```
+
+### Resource Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "64f8a1b2c3d4e5f678901234",
+    "title": "Sample PDF Document",
+    "fileUrl": "https://example.com/document.pdf",
+    "userId": "user_uuid_here",
+    "content": {
+      "pages": ["Page 1 text content...", "Page 2 text content..."],
+      "totalPages": 2,
+      "extractedAt": "2024-01-15T10:30:00.000Z"
+    },
+    "createdAt": "2024-01-15T10:30:00.000Z",
+    "updatedAt": "2024-01-15T10:30:00.000Z"
+  }
+}
+```
+
 ## Project Structure
 
 ```
 src/
 ├── app.js              # Main Express application
 ├── routes/
-│   └── storage.js      # Storage API routes with Swagger schemas
+│   ├── storage.js      # Storage API routes with Swagger schemas
+│   └── resource.js     # Resource API routes with Swagger schemas
 ├── controllers/
-│   └── storage/
-│       └── post.js     # Storage controller logic
+│   ├── storage/
+│   │   └── post.js     # Storage controller logic
+│   └── resource/
+│       └── post.js     # Resource controller logic with OCR processing
 ├── validations/
-│   └── storage.js      # Input validation schemas
+│   ├── storage.js      # Storage input validation schemas
+│   └── resource.js     # Resource input validation schemas
+├── models/
+│   └── resource.js     # MongoDB Resource model schema
+├── middlewares/
+│   └── auth.js         # Authentication middleware using Supabase
 ├── constants/
 │   └── storage.js      # Storage constants
 └── providers/
-    ├── index.js        # Provider exports
+    ├── db.js           # Database connection (MongoDB + PostgreSQL)
+    ├── ocr.js          # OCR processing using Tesseract.js
+    ├── supabase.js     # Supabase client for authentication
     ├── aws.js          # AWS S3 integration
     └── swagger.js      # Simplified Swagger configuration
 ```
@@ -121,6 +179,10 @@ src/
 - **Express.js** - Web framework
 - **Swagger** - API documentation
 - **Joi** - Input validation
+- **Mongoose** - MongoDB ODM
+- **Tesseract.js** - OCR text extraction
+- **PDF processing** - pdf2pic, pdf-lib for PDF handling
+- **Supabase** - Authentication and user management
 - **AWS SDK** - S3 integration
 - **Helmet** - Security middleware
 - **CORS** - Cross-origin resource sharing 

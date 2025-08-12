@@ -30,7 +30,7 @@ async function extractTextPerPage(pdfPath, lang = "eng", dpi = 300) {
 		return convert(pageNum)
 			.then(pageImage =>
 				Tesseract.recognize(pageImage.path, lang, {
-					langPath: "https://tessdata.projectnaptha.com/4.0.0"
+					langPath: "./"
 				})
 			)
 			.then(({ data: { text } }) => {

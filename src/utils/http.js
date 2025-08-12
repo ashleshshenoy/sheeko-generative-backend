@@ -1,9 +1,9 @@
 // src/utils/errorMessages.js
 class HttpError extends Error {
-	constructor(message, statusCode) {
+	constructor(message, status) {
 		super(message);
 		this.name = "HttpError";
-		this.statusCode = statusCode;
+		this.status = status;
       
 		// Ensure the stack trace is correctly captured
 		if (Error.captureStackTrace) {

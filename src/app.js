@@ -6,7 +6,9 @@ require("dotenv").config();
 
 // Import providers and routes
 const { swaggerDocs } = require("./providers/swagger");
+const { connectMongoDB } = require("./providers/db");
 const storageRoutes = require("./routes/storage");
+const resourceRoutes = require("./routes/resource");
 
 const app = express();
 const PORT = process.env.PORT || 443;
@@ -30,6 +32,7 @@ app.get("/health", (req, res) => {
 
 // API routes
 app.use("/api/storage", storageRoutes);
+app.use("/api/resource", resourceRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
@@ -56,8 +59,15 @@ app.use((err, req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-	console.log("🔍 Health check available at http://localhost:" + PORT + "/health");
+app.listen(PORT, async () => {
+	try {
+		// Connect to MongoDB
+		await connectMongoDB();
+		console.log("🔍 Health check available at http://localhost:" + PORT + "/health");
+	} catch (error) {
+		console.error("Failed to start server:", error);
+		process.exit(1);
+	}
 });
 
 module.exports = app;
