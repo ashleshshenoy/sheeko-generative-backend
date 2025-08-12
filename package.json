@@ -1,8 +1,10 @@
 {
   "name": "gitt",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/app.js",
   "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -10,8 +12,22 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.470.0",
+    "@aws-sdk/s3-request-presigner": "^3.470.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "joi": "^17.11.0",
     "pdf-lib": "^1.17.1",
     "pdf2pic": "^3.2.0",
-    "tesseract.js": "^6.0.1"
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
+    "tesseract.js": "^6.0.1",
+    "uuid": "^9.0.1",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }
