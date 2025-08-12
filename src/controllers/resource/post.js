@@ -1,4 +1,4 @@
-const Resource = require("../../models/resource");
+const { ResourceModel } = require("../../models/resource");
 const { postResourceValidation } = require("../../validations/resource");
 const { extractTextPerPage } = require("../../providers/ocr");
 const { downloadFromS3, DEFAULT_BUCKET } = require("../../providers/aws");
@@ -49,7 +49,7 @@ const createResource = async (req, res, next) => {
 		const content = await extractTextPerPage(tempFilePath);
 		
 		// Create the resource
-		const resource = new Resource({
+		const resource = new ResourceModel({
 			title,
 			fileUrl,
 			userId,

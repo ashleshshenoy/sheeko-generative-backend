@@ -63,6 +63,12 @@ The server will start on port 3000 (or the port specified in your `.env` file).
 
 ### Resource API
 
+- **GET** `/api/resource` - Get paginated resources for authenticated user
+  - Requires authentication (Bearer token in Authorization header)
+  - Supports pagination with `page` and `limit` query parameters
+  - Automatically filters by authenticated user's ID
+  - Returns paginated results with metadata
+
 - **POST** `/api/resource` - Create a new resource with OCR content extraction
   - Requires authentication (Bearer token in Authorization header)
   - Automatically downloads PDF from provided URL and extracts text using OCR
@@ -111,6 +117,18 @@ curl -X POST http://localhost:3000/api/storage/upload-url \
 }
 ```
 
+### Get Paginated Resources
+
+```bash
+# Get first page with default limit (10 items)
+curl -X GET "http://localhost:3000/api/resource" \
+  -H "Authorization: Bearer your_supabase_token_here"
+
+# Get specific page with custom limit
+curl -X GET "http://localhost:3000/api/resource?page=2&limit=5" \
+  -H "Authorization: Bearer your_supabase_token_here"
+```
+
 ### Create Resource with OCR
 
 ```bash
@@ -123,7 +141,33 @@ curl -X POST http://localhost:3000/api/resource \
   }'
 ```
 
-### Resource Response
+### Get Resources Response
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "64f8a1b2c3d4e5f678901234",
+      "title": "Sample PDF Document",
+      "fileUrl": "https://example.com/document.pdf",
+      "userId": "user_uuid_here",
+      "content": {
+        "totalPages": 2,
+        "extractedAt": "2024-01-15T10:30:00.000Z"
+      },
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    }
+  ],
+  "totalPages": 5,
+  "page": 1,
+  "limit": 10,
+  "totalData": 47
+}
+```
+
+### Create Resource Response
 
 ```json
 {
