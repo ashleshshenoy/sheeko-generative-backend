@@ -2,7 +2,7 @@ const { S3Client, PutObjectCommand, GetObjectCommand, HeadObjectCommand } = requ
 const fs = require("fs");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
-const REGION = "us-east-1";
+const REGION = "ap-south-1";
 const DEFAULT_BUCKET = process.env.AWS_S3_BUCKET || "sheek-backend";
 
 const credentials = {

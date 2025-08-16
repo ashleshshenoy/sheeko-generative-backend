@@ -9,6 +9,8 @@ const { swaggerDocs } = require("./providers/swagger");
 const { connectMongoDB } = require("./providers/db");
 const storageRoutes = require("./routes/storage");
 const resourceRoutes = require("./routes/resource");
+const testRoutes = require("./routes/test");
+const { getUserFromToken } = require("./middlewares/auth");
 
 const app = express();
 const PORT = process.env.PORT || 443;
@@ -31,8 +33,9 @@ app.get("/health", (req, res) => {
 });
 
 // API routes
-app.use("/api/storage", storageRoutes);
-app.use("/api/resource", resourceRoutes);
+app.use("/api/storage",  getUserFromToken,  storageRoutes);
+app.use("/api/resource", getUserFromToken,  resourceRoutes);
+app.use("/test", testRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {

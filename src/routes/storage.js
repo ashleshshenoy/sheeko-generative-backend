@@ -76,6 +76,8 @@ const router = express.Router();
  *     summary: Generate presigned URL for file upload
  *     description: Creates a presigned URL that allows direct upload to S3 bucket
  *     tags: [Storage]
+ *     security:
+ *       - Bearer: []
  *     requestBody:
  *       required: true
  *       content:

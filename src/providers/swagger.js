@@ -1,4 +1,3 @@
-// swaggerConfig.js
 const swaggerJSDoc = require("swagger-jsdoc");
 const path = require("path");
 
@@ -10,33 +9,36 @@ const swaggerOptions = {
 			version: "1.6",
 			description: "API Documentation for Users",
 		},
-	
 		components: {
 			securitySchemes: {
 				Bearer: {
 					type: "http",
 					scheme: "bearer",
+					bearerFormat: "JWT",
 				},
-				ApiKeyAuth: { 
-					type: "apiKey",
-					in: "header",
-					name: "x-api-key",
-					description: "API Key required for authorization",
-				}
-			}
-		},  
-	
+			},
+		},
+		security: [
+			{
+				Bearer: [],
+			},
+		],		
 	},
-	// Correctly include paths to the route and controller files
 	apis: [
-		path.join(__dirname, "./../controllers/**/*.js"), 
-		path.join(__dirname, "./../routes/**/*.js"), 
+		path.join(__dirname, "./../controllers/**/*.js"),
+		path.join(__dirname, "./../routes/**/*.js"),
 	],
 };
-  
-// Generate Swagger docs using swagger-jsdoc
+
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
+// Remove Bearer auth from /test routes in the generated docs
+if (swaggerDocs.paths && swaggerDocs.paths["/test"]) {
+  Object.keys(swaggerDocs.paths["/test"]).forEach((method) => {
+	swaggerDocs.paths["/test"][method].security = [];
+  });
+}
+
 module.exports = {
-	swaggerDocs
-}; 
+  swaggerDocs,
+};

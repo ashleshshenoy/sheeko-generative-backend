@@ -7,7 +7,7 @@ const { supabase } = require("./../providers/supabase");
  */
 const getUserFromToken = async (req, res, next) => {
 	const token = req.headers.authorization?.split("Bearer ")[1]; 
-	
+	console.log(req.headers);
 	if (!token) {
 		return next(new HttpError("No token provided", 401));
 	}

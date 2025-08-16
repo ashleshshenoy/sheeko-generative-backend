@@ -135,7 +135,7 @@ const { getUserFromToken } = require("../middlewares/auth");
  *     description: Creates a new resource by downloading a PDF from the provided URL, extracting text content using OCR, and storing it in the database
  *     tags: [Resources]
  *     security:
- *       - bearerAuth: []
+ *       - Bearer: []
  *     requestBody:
  *       required: true
  *       content:
@@ -180,7 +180,7 @@ const { getUserFromToken } = require("../middlewares/auth");
  *     description: Retrieves a paginated list of resources filtered by the authenticated user's ID
  *     tags: [Resources]
  *     security:
- *       - bearerAuth: []
+ *       - Bearer: []
  *     parameters:
  *       - in: query
  *         name: page
